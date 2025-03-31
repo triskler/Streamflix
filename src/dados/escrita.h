@@ -1,0 +1,12 @@
+// src/dados/escrita.h
+
+#ifndef ESCRITA_H
+#define ESCRITA_H
+
+#include "../catalogo/catalogo.h"
+#include "../usuario/usuario.h"
+
+void salvar_catalogo(const char *nome_arquivo, Catalogo *catalogo);
+void salvar_historico(const char *nome_arquivo, SistemaUsuarios *sistema);
+
+#endif // ESCRITA_H

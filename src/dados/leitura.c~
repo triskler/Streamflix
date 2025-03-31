@@ -1,0 +1,13 @@
+// src/dados/leitura.c
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "leitura.h"
+#include "catalogo/catalogo.h"
+
+
+// Função para carregar o catálogo a partir de um arquivo CSV
+void carregar_catalogo(const char *nome_arquivo, Catalogo *catalogo) {
+    // Implementação da leitura do arquivo CSV
+}
