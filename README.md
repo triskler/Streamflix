@@ -31,6 +31,20 @@ Streamflix é um sistema de gerenciamento de catálogo de filmes que permite aos
    gcc -o main src/main.c src/catalogo/catalogo.c src/dados/escrita.c src/dados/leitura.c src/usuario/usuario.c src/recomendacao/recomendacao.c src/relatorio/relatorio.c src/utils/utils.c
 
 4. Execute o programa:
-```bash
-./main
+   ```bash
+   ./main
+   ```
+   
+5. Uso
+   
+   Ao executar o programa, você verá um menu com várias opções.
+   Siga as instruções na tela para adicionar, remover ou editar filmes, registrar interações e gerar recomendações.
+
+
+   ## Contato
+   
+   Se você tiver alguma dúvida ou sugestão, sinta-se à vontade para entrar em contato:
+
+   Nome: Rafael Fonseca
+   e-mail: fonseca.wutang@gmail.com
 
