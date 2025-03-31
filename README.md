@@ -46,5 +46,6 @@ Streamflix é um sistema de gerenciamento de catálogo de filmes que permite aos
    Se você tiver alguma dúvida ou sugestão, sinta-se à vontade para entrar em contato:
 
    Nome: Rafael Fonseca
+   
    e-mail: fonseca.wutang@gmail.com
 
