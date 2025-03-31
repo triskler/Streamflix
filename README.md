@@ -19,4 +19,18 @@ Streamflix é um sistema de gerenciamento de catálogo de filmes que permite aos
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/USERNAME/Streamflix.git
+   git clone https://github.com/triskler/Streamflix.git
+
+
+2. Navegue até o diretório do projeto:
+   ```bash
+   cd Streamflix
+
+3. Compile o programa:
+   ```bash
+   gcc -o main src/main.c src/catalogo/catalogo.c src/dados/escrita.c src/dados/leitura.c src/usuario/usuario.c src/recomendacao/recomendacao.c src/relatorio/relatorio.c src/utils/utils.c
+
+4. Execute o programa:
+```bash
+./main
+
