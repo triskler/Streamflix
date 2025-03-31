@@ -1,0 +1,51 @@
+// src/catalogo/catalogo.h
+
+#ifndef CATALOGO_H
+#define CATALOGO_H
+
+#define MAX_FILMES 100
+#define MAX_USUARIOS 100
+
+typedef struct {
+    char titulo[100];
+    char categoria[50];
+    int duracao; // em minutos
+    char classificacao_etaria[10];
+    int numero_visualizacoes;
+    int reproduzido; // 0: não reproduzido, 1: reproduzido
+    int pausado;     // 0: não pausado, 1: pausado
+    int concluido;   // 0: não concluído, 1: concluído
+} Filme;
+
+typedef struct {
+    Filme *filmes;
+    int quantidade;
+} Catalogo;
+
+typedef struct {
+    char nome[100];
+    int interacoes; // Número de interações do usuário
+    char historico[MAX_FILMES][100]; // Histórico de filmes assistidos
+    int quantidade_historico; // Quantidade de filmes no histórico
+} Usuario;
+
+typedef struct {
+    Usuario usuarios[MAX_USUARIOS];
+    int quantidade;
+} SistemaUsuarios;
+
+void carregar_catalogo(const char *nome_arquivo, Catalogo *catalogo);
+void liberar_catalogo(Catalogo *catalogo);
+void adicionar_filme(Catalogo *catalogo, Filme filme);
+void remover_filme(Catalogo *catalogo, const char *titulo);
+void editar_filme(Catalogo *catalogo, const char *titulo, Filme novo_filme);
+void pesquisar_filme(Catalogo *catalogo, const char *termo);
+void exibir_filmes(Catalogo *catalogo);
+void registrar_interacao(Catalogo *catalogo, const char *titulo, const char *acao, const char *usuario);
+void criar_lista_personalizada(ListaPersonalizada *lista, const char *nome);
+void adicionar_a_lista(ListaPersonalizada *lista, Filme filme);
+void exibir_lista(ListaPersonalizada *lista);
+void gerar_relatorios(Catalogo *catalogo, SistemaUsuarios *sistema);
+void recomendar_filmes(SistemaUsuarios *sistema, const char *usuario, Catalogo *catalogo);
+
+#endif // CATALOGO_H

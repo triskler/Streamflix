@@ -1,0 +1,101 @@
+// src/main.c
+
+#include <stdio.h>
+#include <string.h>
+#include "catalogo/catalogo.h"
+#include "usuario/usuario.h"
+#include "recomendacao/recomendacao.h"
+#include "relatorio/relatorio.h"
+#include "dados/escrita.h"
+#include "utils/utils.h"
+
+void menu(Catalogo *catalogo, SistemaUsuarios *sistema) {
+    int opcao;
+    Filme filme;
+
+    do {
+        printf("Menu:\n");
+        printf("1. Adicionar Filme\n");
+        printf("2. Remover Filme\n");
+        printf("3. Editar Filme\n");
+        printf("4. Pesquisar Filme\n");
+        printf("5. Exibir Filmes\n");
+        printf("6. Registrar Interação\n");
+        printf("7. Criar Lista Personalizada\n");
+        printf("8. Adicionar à Lista\n");
+        printf("9. Exibir Lista\n");
+        printf("10. Gerar Relatórios\n");
+        printf("11. Recomendar Filmes\n");
+        printf("12. Salvar Dados\n");
+        printf("13. Sair\n");
+        printf("Escolha uma opção: ");
+        scanf("%d", &opcao);
+        limpar_buffer(); // Limpar o buffer após a leitura
+
+        switch (opcao) {
+            case 1:
+                // Código para adicionar filme
+                    break;
+            case 2:
+                // Código para remover filme
+                    break;
+            case 3:
+                // Código para editar filme
+                    break;
+            case 4:
+                // Código para pesquisar filme
+                    break;
+            case 5:
+                exibir_filmes(catalogo);
+            break;
+            case 6:
+                printf("Título do filme: ");
+            fgets(filme.titulo, sizeof(filme.titulo), stdin);
+            filme.titulo[strcspn(filme.titulo, "\n")] = 0; // Remover nova linha
+            // Código para registrar interação
+            break;
+            case 10:
+                gerar_relatorios(catalogo, sistema);
+            break;
+            case 11:
+                printf("Nome do usuário: ");
+            char usuario[100];
+            fgets(usuario, sizeof(usuario), stdin);
+            usuario[strcspn(usuario, "\n")] = 0; // Remover nova linha
+            recomendar_filmes(sistema, usuario, catalogo);
+            break;
+            case 12:
+                salvar_catalogo("catalogo.csv", catalogo);
+            salvar_historico("historico.csv", sistema);
+            printf("Dados salvos com sucesso!\n");
+            break;
+        }
+    } while (opcao != 13);
+}
+
+int main() {
+    Catalogo catalogo;
+    SistemaUsuarios sistema;
+    char nome_arquivo[256];
+
+    // Inicializar o sistema de usuários
+    sistema.quantidade = 0;
+
+    printf("Insira o nome do arquivo .csv: ");
+    scanf("%255s", nome_arquivo);
+    limpar_buffer(); // Limpar o buffer após a leitura
+
+    // Carregar o catálogo a partir do arquivo CSV
+    carregar_catalogo(nome_arquivo, &catalogo);
+
+    // Menu principal
+    menu(&catalogo, &sistema);
+
+    // Salvar dados ao sair
+    salvar_catalogo("catalogo.csv", &catalogo);
+    salvar_historico("historico.csv", &sistema);
+
+    // Liberar memória
+    liberar_catalogo(&catalogo);
+    return 0;
+}

@@ -1,0 +1,124 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "catalogo.h"
+
+
+
+void salvar_historico(const char *nome_arquivo, SistemaUsuarios *sistema) {
+    FILE *file = fopen(nome_arquivo, "w");
+    if (!file) {
+        perror("Erro ao abrir o arquivo para salvar o histórico de usuários");
+        return;
+    }
+
+    for (int i = 0; i < sistema->quantidade; i++) {
+        fprintf(file, "%s,%d", sistema->usuarios[i].nome, sistema->usuarios[i].interacoes);
+        for (int j = 0; j < sistema->usuarios[i].quantidade_historico; j++) {
+            fprintf(file, ",%s", sistema->usuarios[i].historico[j]);
+        }
+        fprintf(file, "\n");
+    }
+
+    fclose(file);
+}
+
+void salvar_catalogo(const char *nome_arquivo, Catalogo *catalogo) {
+    FILE *file = fopen(nome_arquivo, "w");
+    if (!file) {
+        perror("Erro ao abrir o arquivo para salvar o catálogo");
+        return;
+    }
+
+    for (int i = 0; i < catalogo->quantidade; i++) {
+        fprintf(file, "%s,%s,%d,%s,%d\n",
+                catalogo->filmes[i].titulo,
+                catalogo->filmes[i].categoria,
+                catalogo->filmes[i].duracao,
+                catalogo->filmes[i].classificacao_etaria,
+                catalogo->filmes[i].numero_visualizacoes);
+    }
+
+    fclose(file);
+}
+
+// Função para recomendar filmes com base no histórico de visualização do usuário
+void recomendar_filmes(SistemaUsuarios *sistema, const char *usuario, Catalogo *catalogo) {
+    int usuario_index = -1;
+
+    // Encontrar o índice do usuário
+    for (int i = 0; i < sistema->quantidade; i++) {
+        if (strcmp(sistema->usuarios[i].nome, usuario) == 0) {
+            usuario_index = i;
+            break;
+        }
+    }
+
+    if (usuario_index == -1) {
+        printf("Usuário não encontrado: %s\n", usuario);
+        return;
+    }
+
+    Usuario *u = &sistema->usuarios[usuario_index];
+    printf("Recomendações para %s:\n", u->nome);
+
+    // Criar um conjunto de categorias assistidas
+    char categorias_assistidas[MAX_FILMES][50];
+    int num_categorias = 0;
+
+    for (int i = 0; i < u->quantidade_historico; i++) {
+        for (int j = 0; j < catalogo->quantidade; j++) {
+            if (strcmp(u->historico[i], catalogo->filmes[j].titulo) == 0) {
+                // Adicionar categoria se ainda não estiver na lista
+                int found = 0;
+                for (int k = 0; k < num_categorias; k++) {
+                    if (strcmp(categorias_assistidas[k], catalogo->filmes[j].categoria) == 0) {
+                        found = 1;
+                        break;
+                    }
+                }
+                if (!found) {
+                    strcpy(categorias_assistidas[num_categorias++], catalogo->filmes[j].categoria);
+                }
+                break;
+            }
+        }
+    }
+
+    // Recomendar filmes com base nas categorias assistidas
+    for (int i = 0; i < catalogo->quantidade; i++) {
+        for (int j = 0; j < num_categorias; j++) {
+            if (strcmp(catalogo->filmes[i].categoria, categorias_assistidas[j]) == 0) {
+                printf("Título: %s | Categoria: %s\n", catalogo->filmes[i].titulo, catalogo->filmes[i].categoria);
+                break;
+            }
+        }
+    }
+}
+
+// src/catalogo/catalogo.c
+
+void registrar_interacao(Catalogo *catalogo, const char *titulo, const char *acao, const char *usuario) {
+    for (int i = 0; i < catalogo->quantidade; i++) {
+        if (strcmp(catalogo->filmes[i].titulo, titulo) == 0) {
+            if (strcmp(acao, "reproduzir") == 0) {
+                catalogo->filmes[i].reproduzido = 1;
+                catalogo->filmes[i].numero_visualizacoes++;
+            } else if (strcmp(acao, "pausar") == 0) {
+                catalogo->filmes[i].pausado = 1;
+            } else if (strcmp(acao, "concluir") == 0) {
+                catalogo->filmes[i].concluido = 1;
+            }
+
+            // Adicionar o filme ao histórico do usuário
+            for (int j = 0; j < sistema->quantidade; j++) {
+                if (strcmp(sistema->usuarios[j].nome, usuario) == 0) {
+                    strcpy(sistema->usuarios[j].historico[sistema->usuarios[j].quantidade_historico++], titulo);
+                    break;
+                }
+            }
+            return;
+        }
+    }
+    printf("Filme não encontrado: %s\n", titulo);
+}
