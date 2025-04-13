@@ -1,0 +1,75 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include "interacoes.h"
+
+void logInteracao(const char *user_id, const char *content_id, Acao acao) {
+    FILE *arquivo = fopen(INTERACOES_CSV, "a");
+    if(!arquivo) {
+        printf("Erro ao abrir arquivo de interações!\n");
+        return;
+    }
+
+    time_t now = time(NULL);
+    struct tm *t = localtime(&now);
+    char timestamp[20];
+    strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S", t);
+
+    const char *acao_str;
+    switch(acao) {
+        case PLAY: acao_str = "PLAY"; break;
+        case PAUSE: acao_str = "PAUSE"; break;
+        case FINISH: acao_str = "FINISH"; break;
+    }
+
+    fprintf(arquivo, "%s,%s,%s,%s\n",
+            user_id, content_id, acao_str, timestamp);
+    fclose(arquivo);
+}
+
+void registrarInteracao(CSVData *dados, const char *user_id) {
+    if(!dados || dados->num_linhas == 0) {
+        printf("Nenhum conteúdo disponível!\n");
+        return;
+    }
+
+    exibirConteudoCSV(dados);
+
+    int escolha;
+    printf("\nDigite o número do conteúdo: ");
+    scanf("%d", &escolha);
+    getchar(); // Limpar buffer
+
+    if(escolha < 1 || escolha > dados->num_linhas) {
+        printf("Escolha inválida!\n");
+        return;
+    }
+
+    printf("\n1. Play\n2. Pause\n3. Finish\nAção: ");
+    int acao;
+    scanf("%d", &acao);
+    getchar();
+
+    // Obter ID do conteúdo
+    char *linha = dados->linhas[escolha-1];
+    char content_id[50];
+    strncpy(content_id, linha, strcspn(linha, ","));
+
+    // Registrar interação
+    switch(acao) {
+        case 1:
+            logInteracao(user_id, content_id, PLAY);
+        break;
+        case 2:
+            logInteracao(user_id, content_id, PA USE);
+        break;
+        case 3:
+            logInteracao(user_id, content_id, FINISH);
+        // Atualizar contagem de visualizações
+        registrarVisualizacao(dados, escolha - 1);
+        break;
+        default:
+            printf("Ação inválida!\n");
+    }
+}

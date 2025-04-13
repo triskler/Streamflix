@@ -1,0 +1,15 @@
+#ifndef ARQUIVOS_H
+#define ARQUIVOS_H
+#define DELIMITADOR ','
+#define TAMANHO_LINHA 1024
+
+typedef struct {
+    char **linhas;
+    int num_linhas;
+} CSVData;
+
+CSVData* carregarCSV(const char *nome_arquivo);
+void liberarDadosCSV(CSVData *dados);
+void salvarCSV(const CSVData *dados, const char *nome_arquivo);
+
+#endif
